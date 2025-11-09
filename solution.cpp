@@ -27,7 +27,7 @@ struct NFA {
 };
 
 static bool is_literal(char ch) {
-  if (ch == '|' || ch == '*' || ch == '(' || ch == ')' || ch == '.')
+  if (ch == '+' || ch == '*' || ch == '(' || ch == ')' || ch == '.')
     return false;
   return true;
 }
@@ -55,7 +55,7 @@ static int prec(char op) {
     return 3;
   if (op == '.')
     return 2;
-  if (op == '|')
+  if (op == '+')
     return 1;
   return 0;
 }
@@ -127,7 +127,7 @@ static NFA build_nfa_from_postfix(const std::string &postfix) {
       Frag a = stk.back(); stk.pop_back();
       nfa.add_transition(a.e, b.s, 0);
       stk.emplace_back(a.s, b.e);
-    } else if (c == '|') {
+    } else if (c == '+') {
       if (stk.size() < 2)
         throw std::runtime_error("стек переполнен");
       Frag b = stk.back(); stk.pop_back();
